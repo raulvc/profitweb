@@ -60,8 +60,3 @@ class OrderItem(models.Model):
     def description(self):
         # just a shortcut for displaying product's name
         return self.product.name
-
-    def valid_multipler(self):
-        # returns true if quantity is divisible by multiplier or multiplier is null valued
-        multiplier = self.product.multiplier
-        return True if (multiplier is None) else (self.quantity % multiplier == 0)

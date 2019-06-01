@@ -7,10 +7,11 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 from django.urls import path, include
 from rest_framework import routers
 
-from profitweb.core.views import ClientViewSet
+from profitweb.core.views import ClientViewSet, ProductViewSet
 
 router = routers.DefaultRouter()
-router.register(r'users', ClientViewSet)
+router.register(r'clients', ClientViewSet)
+router.register(r'products', ProductViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
