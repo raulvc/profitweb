@@ -1,3 +1,9 @@
+"""
+Modeling
+"""
+
+# NOTE: there's no separation between domain logic and model declaration in django
+
 from decimal import Decimal
 
 from django.db import models

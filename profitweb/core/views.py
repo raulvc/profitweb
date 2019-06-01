@@ -2,23 +2,38 @@
 Views to expose models as API endpoints
 """
 
-from rest_framework import viewsets
+from rest_framework.viewsets import ModelViewSet
 
-from profitweb.core.models import Client, Product
-from profitweb.core.serializers import ClientSerializer, ProductSerializer
+from profitweb.core.models import Client, Product, Order
+from profitweb.core.serializers import ClientSerializer, ProductSerializer, OrderSerializer
 
 
-class ClientViewSet(viewsets.ModelViewSet):
+class ClientViewSet(ModelViewSet):
     """
     Client listing
     """
-    queryset = Client.objects.all()
+    # auth specific classes would be listed here
+
+    # OEM manipulation
+    queryset = Client.objects.all().order_by('name')
     serializer_class = ClientSerializer
 
 
-class ProductViewSet(viewsets.ModelViewSet):
+class ProductViewSet(ModelViewSet):
     """
     Product listing
     """
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().order_by('name')
     serializer_class = ProductSerializer
+
+
+class OrderViewSet(ModelViewSet):
+    """
+    Order listing / create
+    """
+    queryset = Order.objects.all().order_by('id')
+    serializer_class = OrderSerializer
+
+    def perform_create(self, serializer):
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
