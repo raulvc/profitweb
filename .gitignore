@@ -13,3 +13,6 @@ server/.idea
 
 # webstorm
 client/.idea
+
+# node modules
+client/node_modules
