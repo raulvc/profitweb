@@ -3,10 +3,13 @@ __pycache__/
 *.py[cod]
 
 # local sqlite db
-profitweb.db
+server/profitweb.db
 
 # virtualenv
-venv
+server/venv
 
 # pycharm
-.idea
+server/.idea
+
+# webstorm
+client/.idea
