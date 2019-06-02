@@ -1,4 +1,5 @@
-Django==2.2.1
+Django==2.1.8
 djangorestframework==3.9.4
+drf-rw-serializers==1.0.1
 pytz==2019.1
 sqlparse==0.3.0

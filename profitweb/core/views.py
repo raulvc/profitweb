@@ -1,11 +1,12 @@
 """
 Views to expose models as API endpoints
 """
-
+from drf_rw_serializers import generics
 from rest_framework.viewsets import ModelViewSet
 
 from profitweb.core.models import Client, Product, Order
-from profitweb.core.serializers import ClientSerializer, ProductSerializer, OrderSerializer
+from profitweb.core.serializers import ClientSerializer, ProductSerializer, OrderCreateSerializer, \
+    OrderListSerializer
 
 
 class ClientViewSet(ModelViewSet):
@@ -27,13 +28,18 @@ class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
 
 
-class OrderViewSet(ModelViewSet):
+class OrderListCreateView(generics.ListCreateAPIView):
     """
     Order listing / create
+    (separate serializers for each operation)
     """
     queryset = Order.objects.all().order_by('id')
-    serializer_class = OrderSerializer
+    write_serializer_class = OrderCreateSerializer
+    read_serializer_class = OrderListSerializer
 
-    def perform_create(self, serializer):
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+    # NOTE: To intercept requests I could override these methods:
+    # def post(self, request, *args, **kwargs):
+    #     return self.create(request, *args, **kwargs)
+    #
+    # def perform_create(self, serializer):
+    #     serializer.save()

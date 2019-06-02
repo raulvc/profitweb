@@ -1,3 +1,3 @@
-from django.contrib import admin
+# django has a builtin management tool, I could customize it here
 
-# Register your models here.
+from django.contrib import admin

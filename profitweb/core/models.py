@@ -41,11 +41,16 @@ class Order(models.Model):
         null=False
     )
 
+    @property
+    def total_price(self):
+        qs = self.items.through.objects.all().aggregate(total_price=models.Sum('order_item__unit_price'))
+        return qs['total_price']
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(
         # NOTE: naming a relation makes it easier to reference on a parent object
-        Order, related_name="items", on_delete=models.DO_NOTHING,
+        Order, related_name="items", on_delete=models.CASCADE,
         null=False
     )
     product = models.ForeignKey(
@@ -62,7 +67,3 @@ class OrderItem(models.Model):
         max_digits=12,
         validators=[MinValueValidator(Decimal('0.01'))]
     )
-
-    def description(self):
-        # just a shortcut for displaying product's name
-        return self.product.name
