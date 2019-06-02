@@ -98,10 +98,10 @@ class OrderItemListSerializer(serializers.ModelSerializer):
 
 class OrderListSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-
+    total_price = serializers.ReadOnlyField()
     items = OrderItemListSerializer(many=True)
     client = ClientSerializer()
 
     class Meta:
         model = Order
-        fields = '__all__'
+        fields = ('id', 'client', 'items', 'total_price')

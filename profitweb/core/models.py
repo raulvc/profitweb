@@ -43,8 +43,8 @@ class Order(models.Model):
 
     @property
     def total_price(self):
-        qs = self.items.through.objects.all().aggregate(total_price=models.Sum('order_item__unit_price'))
-        return qs['total_price']
+        qs = self.items.all().aggregate(total_price=models.Sum('unit_price'))
+        return "%0.2f" % qs['total_price']
 
 
 class OrderItem(models.Model):
