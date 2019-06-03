@@ -35,12 +35,12 @@
         <v-flex xs12 sm6>
           <v-currency-field label="Quantity" :max="max_num" :min="min_quantity"
                             v-model="item.quantity" :precision="0"
-                            :rules="[v => !!v || 'Item is required']"></v-currency-field>
+                            :rules="[ validateQuantity ]"></v-currency-field>
         </v-flex>
         <v-flex xs12 sm6>
           <v-currency-field label="Price" :max="max_num" :min="min_price"
                             v-model="item.unit_price"
-                            :rules="[v => !!v || 'Item is required']"
+                            :rules="[ validatePrice ]"
                             prefix="$"
           ></v-currency-field>
         </v-flex>
@@ -61,7 +61,6 @@ export default {
   },
   data () {
     return {
-      errors: [],
       item: {
         product: null,
         quantity: 1,
@@ -70,7 +69,7 @@ export default {
 
       min_quantity: 1,
       min_price: 0.01,
-      max_digits: 9999999999.99
+      max_num: 9999999999.99
     }
   },
 
@@ -119,6 +118,26 @@ export default {
         item: this.item,
         index: this.index
       })
+    },
+
+    validateQuantity (value) {
+      if (!value) {
+        return 'Item is required'
+      }
+      if (!this.isDivisible()) {
+        return 'Quantity must be divisible by ' + this.item.product.multiplier
+      }
+      return true
+    },
+
+    validatePrice (value) {
+      if (!value) {
+        return 'Item is required'
+      }
+      if (this.getProfitability() === 'Bad') {
+        return 'Price must be at least $ ' + (this.item.product.unit_price * 0.9).toFixed(2)
+      }
+      return true
     }
   },
 

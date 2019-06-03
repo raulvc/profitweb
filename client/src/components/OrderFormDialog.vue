@@ -46,6 +46,12 @@
           <v-btn color="blue" dark @click="save">Save</v-btn>
         </v-card-actions>
       </v-card>
+      <ul v-if="errors.length">
+        <b>Error(s) detected:</b>
+        <li v-bind:key="index" v-for="(error, index) in errors">
+          {{ error }}
+        </li>
+      </ul>
     </v-dialog>
   </v-layout>
 </template>
