@@ -5,11 +5,11 @@ import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-import VuetifyNumberInput from '@jzolago/vuetify-number-input'
+import currency from 'v-currency-field'
 
 Vue.config.productionTip = false
 Vue.use(Vuetify, { iconfont: 'mdi' })
-Vue.use(VuetifyNumberInput)
+Vue.use(currency)
 
 /* eslint-disable no-new */
 new Vue({

@@ -13,7 +13,7 @@
             <v-layout wrap>
               <v-flex xs12>
                 <v-combobox
-                  v-model="selected_client"
+                  v-model="order.client"
                   :items="clients"
                   label="Select a client"
                   item-text="name"
@@ -32,7 +32,6 @@
               </v-flex>
             </v-layout>
           </v-container>
-          <small>*indicates required field</small>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>

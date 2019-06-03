@@ -15,14 +15,16 @@
           </v-flex>
 
           <v-flex xs12 sm6>
-
-            <v-input-number class="number_input" label="Quantity" :maxLength="max_digits" :min="min_quantity"
-                            v-model="item.quantity"
-                            :rules="[v => !!v || 'Item is required']"></v-input-number>
-
-            <v-input-number class="number_input" label="Price" :maxLength="max_digits" :min="min_price"
-                            v-model="item.unit_price"
-                            :rules="[v => !!v || 'Item is required']"></v-input-number>
+            <v-currency-field label="Quantity" :maxLength="max_digits" :min="min_quantity"
+                              v-model="item.quantity" :precision="0"
+                              :rules="[v => !!v || 'Item is required']"></v-currency-field>
+          </v-flex>
+          <v-flex xs12 sm6>
+            <v-currency-field label="Price" :maxLength="max_digits" :min="min_price"
+                              v-model="item.unit_price"
+                              :rules="[v => !!v || 'Item is required']"
+                              prefix="$"
+            ></v-currency-field>
           </v-flex>
 
         </v-layout>
@@ -45,7 +47,7 @@ export default {
       item: {
         product: null,
         quantity: 1,
-        unit_price: 0.00
+        unit_price: 0.01
       },
 
       min_quantity: 1,
@@ -57,7 +59,4 @@ export default {
 </script>
 
 <style scoped>
-  .number_input > div > div > i {
-    display: none;
-  }
 </style>
