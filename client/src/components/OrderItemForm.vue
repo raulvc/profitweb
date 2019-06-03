@@ -11,6 +11,7 @@
             label="Select a product"
             item-text="name"
             :rules="[v => !!v || 'Item is required']"
+            @change="suggestPrice"
           >
           </v-combobox>
         </v-flex>
@@ -74,6 +75,10 @@ export default {
   },
 
   methods: {
+    suggestPrice (product) {
+      this.item.unit_price = product.unit_price
+    },
+
     getProfitability () {
       if (this.item.product) {
         const productCost = this.item.product.unit_price
