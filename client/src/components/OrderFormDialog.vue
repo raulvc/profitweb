@@ -58,7 +58,7 @@
 
 <script>
 import axios from 'axios'
-import {buildUrl} from '@/config'
+import {buildUrl} from '@/api_helper'
 import OrderItemForm from '@/components/OrderItemForm'
 
 export default {

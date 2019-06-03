@@ -3,14 +3,17 @@ version: '3'
 services:
   pf_api:
     build: ./server
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    image: raulvc/pfweb-api:latest
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py seed && python manage.py runserver 0.0.0.0:8000"
     container_name: pf_api
     ports:
       - "8000:8000"
 
   pf_web:
     build: ./client
-    command: npm start
+    image: raulvc/pfweb-web:latest
     container_name: pf_web
+    environment:
+    - HOST=0.0.0.0 # binds to all interfaces
     ports:
-      - "80:8080"
+      - "8080:8080"

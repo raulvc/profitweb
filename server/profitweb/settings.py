@@ -26,7 +26,7 @@ SECRET_KEY = 'mmx0t!gpz0(#kma+de6pat=robc+5)k@lf$x*)*_+4^mihzbsl'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
