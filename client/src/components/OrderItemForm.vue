@@ -1,51 +1,52 @@
 <template>
   <v-layout row justify-center>
-    <v-form ref="item_form" persistent max-width="600px" lazy-validation>
-      <v-container grid-list-md>
-        <v-layout wrap>
 
-          <v-flex xs12 sm10>
-            <v-combobox
-              v-model="item.product"
-              :items="products"
-              label="Select a product"
-              item-text="name"
-            >
-            </v-combobox>
-          </v-flex>
+    <v-container class="container" grid-list-md>
+      <v-layout wrap>
 
-          <v-flex xs12 sm1 v-if="getProfitability() !== ''">
-            <v-badge :color="getProfitabilityColor()">
-              <template v-slot:badge>
-                <span class="badge_text">P</span>
-              </template>
-            </v-badge>
-          </v-flex>
+        <v-flex xs12 sm10>
+          <v-combobox
+            v-model="item.product"
+            :items="products"
+            label="Select a product"
+            item-text="name"
+            :rules="[v => !!v || 'Item is required']"
+          >
+          </v-combobox>
+        </v-flex>
 
-          <v-flex xs12 sm1 v-if="!isDivisible()">
-            <v-badge color="red">
-              <template v-slot:badge>
-                <span class="badge_text">M</span>
-              </template>
-            </v-badge>
-          </v-flex>
+        <v-flex xs12 sm1 v-if="getProfitability() !== ''">
+          <v-badge :color="getProfitabilityColor()">
+            <template v-slot:badge>
+              <span class="badge_text">P</span>
+            </template>
+          </v-badge>
+        </v-flex>
 
-          <v-flex xs12 sm6>
-            <v-currency-field label="Quantity" :maxLength="max_digits" :min="min_quantity"
-                              v-model="item.quantity" :precision="0"
-                              :rules="[v => !!v || 'Item is required']"></v-currency-field>
-          </v-flex>
-          <v-flex xs12 sm6>
-            <v-currency-field label="Price" :maxLength="max_digits" :min="min_price"
-                              v-model="item.unit_price"
-                              :rules="[v => !!v || 'Item is required']"
-                              prefix="$"
-            ></v-currency-field>
-          </v-flex>
+        <v-flex xs12 sm1 v-if="!isDivisible()">
+          <v-badge color="red">
+            <template v-slot:badge>
+              <span class="badge_text">M</span>
+            </template>
+          </v-badge>
+        </v-flex>
 
-        </v-layout>
-      </v-container>
-    </v-form>
+        <v-flex xs12 sm6>
+          <v-currency-field label="Quantity" :max="max_num" :min="min_quantity"
+                            v-model="item.quantity" :precision="0"
+                            :rules="[v => !!v || 'Item is required']"></v-currency-field>
+        </v-flex>
+        <v-flex xs12 sm6>
+          <v-currency-field label="Price" :max="max_num" :min="min_price"
+                            v-model="item.unit_price"
+                            :rules="[v => !!v || 'Item is required']"
+                            prefix="$"
+          ></v-currency-field>
+        </v-flex>
+
+      </v-layout>
+    </v-container>
+
   </v-layout>
 </template>
 
@@ -68,7 +69,7 @@ export default {
 
       min_quantity: 1,
       min_price: 0.01,
-      max_digits: 12
+      max_digits: 9999999999.99
     }
   },
 
@@ -134,5 +135,8 @@ export default {
 <style scoped>
   .badge_text {
     text-align: center;
+  }
+  .container {
+    padding-left: 2px;
   }
 </style>

@@ -9,40 +9,41 @@
           <span class="headline">New Order</span>
         </v-card-title>
         <v-card-text>
-          <v-container class="container" grid-list-md>
-            <v-layout wrap>
-              <v-flex xs12>
-                <v-combobox
-                  v-model="order.client"
-                  :items="clients"
-                  label="Select a client"
-                  item-text="name"
-                >
-                </v-combobox>
-              </v-flex>
-              <v-flex xs12>
-                <ul>
-                  <li v-bind:key="index" v-for="(item, index) in order.items">
-                    <v-divider v-if="index !== 0"></v-divider>
+          <v-form ref="order_form" persistent max-width="600px">
+            <v-container class="container" grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12>
+                  <v-combobox
+                    v-model="order.client"
+                    :items="clients"
+                    label="Select a client"
+                    item-text="name"
+                    :rules="[v => !!v || 'Item is required']"
+                  >
+                  </v-combobox>
+                </v-flex>
+                <v-flex xs12>
+                  <ul>
+                    <li v-bind:key="index" v-for="(item, index) in order.items">
+                      <v-divider v-if="index !== 0"></v-divider>
 
-                    <order-item-form :products="products" :index="index" @changed="updateItem"></order-item-form>
+                      <order-item-form :products="products" :index="index" @changed="updateItem"></order-item-form>
 
-                    <v-btn color="red" dark v-if="index !== 0" @click="removeItem(index)">
-                      <span>Remove</span>
-                    </v-btn>
-                  </li>
-                </ul>
-              </v-flex>
-              <v-flex xs12 sm6>
-                <v-btn id="add_item_button" color="primary" @click="addItem">add item</v-btn>
-              </v-flex>
-            </v-layout>
-          </v-container>
+                      <v-btn color="red" dark flat v-if="index !== 0" @click="removeItem(index)">
+                        <span>Remove</span>
+                      </v-btn>
+                    </li>
+                  </ul>
+                </v-flex>
+                <v-btn id="add_item_button" color="primary" flat @click="addItem">add item</v-btn>
+              </v-layout>
+            </v-container>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red darken-1" flat @click="cancel">Cancel</v-btn>
-          <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+          <v-btn color="red" dark @click="close">Cancel</v-btn>
+          <v-btn color="blue" dark @click="save">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -98,19 +99,48 @@ export default {
       this.order.items[index] = payload.item
     },
 
-    cancel () {
-      this.dialog = false
+    close () {
       this.resetItems()
+      this.dialog = false
     },
 
     resetItems () {
+      this.$refs.order_form.reset()
       this.order.items = []
       this.addItem()
     },
 
+    parseOrder () {
+      const orderItems = this.order.items.map((i) => {
+        return {
+          product: i.product.id,
+          quantity: i.quantity,
+          unit_price: i.unit_price
+        }
+      })
+
+      return {
+        client: this.order.client.id,
+        items: orderItems
+      }
+    },
+
     save () {
-      this.$emit('added_order') // letting parent know order was successfully added
-      this.cancel()
+      if (!this.$refs.order_form.validate()) {
+        return
+      }
+
+      const payload = JSON.stringify(this.parseOrder())
+      axios.post(buildUrl('orders/'), payload, {
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(response => {
+          this.$emit('added_order') // letting parent know order was successfully added
+          this.close()
+        })
+        .catch(e => {
+          this.errors.push(e)
+        })
     }
   }
 }
@@ -123,6 +153,7 @@ export default {
   }
   ul {
     list-style-type: none;
+    padding-left: 0;
   }
   .header {
     padding-bottom: 0;

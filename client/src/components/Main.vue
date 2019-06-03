@@ -1,6 +1,6 @@
 <template>
   <div>
-    <order-form-dialog></order-form-dialog>
+    <order-form-dialog @added_order="reloadOrders"></order-form-dialog>
     <ul v-if="orders && orders.results && orders.results.length">
       <li v-bind:key="order.id" v-for="order of orders.results">
         <v-container fluid grid-list-md>
