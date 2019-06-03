@@ -94,14 +94,20 @@ export default {
   },
 
   created () {
-    axios.get(buildUrl('orders/'))
-      .then(response => {
-        // JSON responses are automatically parsed.
-        this.orders = response.data
-      })
-      .catch(e => {
-        this.errors.push(e)
-      })
+    this.reload_orders()
+  },
+
+  methods: {
+    reload_orders () {
+      axios.get(buildUrl('orders/'))
+        .then(response => {
+          // JSON responses are automatically parsed.
+          this.orders = response.data
+        })
+        .catch(e => {
+          this.errors.push(e)
+        })
+    }
   }
 }
 

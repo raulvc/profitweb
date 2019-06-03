@@ -20,9 +20,16 @@
                 >
                 </v-combobox>
               </v-flex>
-<!--              <v-flex xs12 sm6>-->
-<!--                <v-input-number v-model="qty" min="1" maxLength="12" outline="false" label="quantity"></v-input-number>-->
-<!--              </v-flex>-->
+              <v-flex xs12>
+                <ul>
+                  <li v-bind:key="item.product" v-for="item of order.items">
+                    <order-item-form :products="products" :item="item"></order-item-form>
+                  </li>
+                </ul>
+              </v-flex>
+              <v-flex xs12 sm6>
+                <v-btn id="add_item_button" color="primary" @click="add_item">add item</v-btn>
+              </v-flex>
             </v-layout>
           </v-container>
           <small>*indicates required field</small>
@@ -40,23 +47,23 @@
 <script>
 import axios from 'axios'
 import {buildUrl} from '@/config'
+import OrderItemForm from '@/components/OrderItemForm'
 
 export default {
   name: 'OrderFormDialog',
+  components: {OrderItemForm},
   data () {
     return {
-      rowsPerPageItems: [4, 8, 12],
-      pagination: {
-        rowsPerPage: 4
-      },
       clients: [],
       products: [],
       errors: [],
       dialog: false,
 
       // form data
-      selected_client: null,
-      qty: 1
+      order: {
+        client: null,
+        items: []
+      }
     }
   },
 
@@ -68,6 +75,14 @@ export default {
     axios.get(buildUrl('products/'))
       .then(response => { this.products = response.data.results })
       .catch(e => { this.errors.push(e) })
+
+    this.add_item()
+  },
+
+  methods: {
+    add_item () {
+      this.order.items.push({})
+    }
   }
 }
 </script>
@@ -76,5 +91,8 @@ export default {
   #add_button {
     margin-top: 20px;
     margin-left: 50px;
+  }
+  ul {
+    list-style-type: none;
   }
 </style>
