@@ -4,7 +4,7 @@
       <v-container grid-list-md>
         <v-layout wrap>
 
-          <v-flex xs12>
+          <v-flex xs12 sm10>
             <v-combobox
               v-model="item.product"
               :items="products"
@@ -12,6 +12,22 @@
               item-text="name"
             >
             </v-combobox>
+          </v-flex>
+
+          <v-flex xs12 sm1 v-if="getProfitability() !== ''">
+            <v-badge :color="getProfitabilityColor()">
+              <template v-slot:badge>
+                <span class="badge_text">P</span>
+              </template>
+            </v-badge>
+          </v-flex>
+
+          <v-flex xs12 sm1 v-if="!isDivisible()">
+            <v-badge color="red">
+              <template v-slot:badge>
+                <span class="badge_text">M</span>
+              </template>
+            </v-badge>
           </v-flex>
 
           <v-flex xs12 sm6>
@@ -38,8 +54,8 @@
 export default {
   name: 'OrderItemForm',
   props: {
-    parent_item: Object,
-    products: Array
+    products: Array,
+    index: Number
   },
   data () {
     return {
@@ -54,9 +70,69 @@ export default {
       min_price: 0.01,
       max_digits: 12
     }
+  },
+
+  methods: {
+    getProfitability () {
+      if (this.item.product) {
+        const productCost = this.item.product.unit_price
+        const itemPrice = this.item.unit_price
+        if (itemPrice > productCost) {
+          return 'Great'
+        }
+        if (itemPrice > (0.9 * productCost)) {
+          return 'Good'
+        }
+        return 'Bad'
+      }
+      return ''
+    },
+
+    getProfitabilityColor () {
+      const profitability = this.getProfitability()
+      switch (profitability) {
+        case 'Great':
+          return 'green'
+        case 'Good':
+          return 'yellow'
+        default:
+          return 'red'
+      }
+    },
+
+    isDivisible () {
+      if (this.item.product && this.item.product.multiplier) {
+        return this.item.quantity % this.item.product.multiplier === 0
+      }
+      return true
+    },
+
+    updateReference () {
+      // keeping parent list up to date
+      this.$emit('changed', {
+        item: this.item,
+        index: this.index
+      })
+    }
+  },
+
+  created () {
+    this.updateReference()
+  },
+
+  watch: {
+    item: {
+      handler (val) {
+        this.updateReference()
+      },
+      deep: true
+    }
   }
 }
 </script>
 
 <style scoped>
+  .badge_text {
+    text-align: center;
+  }
 </style>

@@ -94,11 +94,11 @@ export default {
   },
 
   created () {
-    this.reload_orders()
+    this.reloadOrders()
   },
 
   methods: {
-    reload_orders () {
+    reloadOrders () {
       axios.get(buildUrl('orders/'))
         .then(response => {
           // JSON responses are automatically parsed.
